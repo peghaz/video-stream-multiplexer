@@ -12,7 +12,9 @@
             "program": "${command:cmake.launchTargetPath}",
             "args": [
                 "data/2022-02-13.mp4",
-                "2121"
+                "2121",
+                "600",
+                "400"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

@@ -5,14 +5,16 @@
 
 int main(int argc, char *argv[])
 {
-    if (argc != 3)
+    if (argc != 5)
     {
-        g_printerr("Usage: %s <video-file> <port>\n", argv[0]);
+        g_printerr("Usage: %s <video-file> <port> <width> <height>\n", argv[0]);
         return -1;
     }
 
     const char *input_file = argv[1];
     const char *port = argv[2];
+    const char *width = argv[3];
+    const char *height = argv[4];
 
     gst_init(&argc, &argv);
     // Initialize FFmpeg
@@ -32,10 +34,10 @@ int main(int argc, char *argv[])
     gst_rtsp_server_set_service(server, port);
     GstRTSPMountPoints *mounts = gst_rtsp_server_get_mount_points(server);
 
-    // Pipeline: filesrc (file input) → decode → encode → payload → RTSP
+    // Pipeline: filesrc (file input) → decode → scale → encode → payload → RTSP
     gchar *pipeline_desc = g_strdup_printf(
-        "( filesrc location=%s ! decodebin ! x264enc tune=zerolatency bitrate=500 speed-preset=ultrafast ! rtph264pay name=pay0 pt=96 )",
-        input_file);
+        "( filesrc location=%s ! decodebin ! videoscale ! video/x-raw,width=%s,height=%s ! x264enc tune=zerolatency bitrate=500 speed-preset=ultrafast ! rtph264pay name=pay0 pt=96 )",
+        input_file, width, height);
 
     GstRTSPMediaFactory *factory = gst_rtsp_media_factory_new();
     gst_rtsp_media_factory_set_launch(factory, pipeline_desc);
