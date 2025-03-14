@@ -15,6 +15,7 @@ pkg_check_modules(SWSCALE REQUIRED IMPORTED_TARGET libswscale)
 pkg_check_modules(GSTREAMER REQUIRED gstreamer-1.0)
 pkg_check_modules(GST_APP REQUIRED gstreamer-app-1.0)
 pkg_check_modules(GST_VIDEO REQUIRED gstreamer-video-1.0)
+pkg_check_modules(GST_RTSP_SERVER REQUIRED gstreamer-rtsp-server-1.0)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
 
 # Include directories for ffmpeg
@@ -31,6 +32,7 @@ include_directories(
     ${GST_APP_INCLUDE_DIRS}
     ${GST_VIDEO_INCLUDE_DIRS}
     ${GLIB_INCLUDE_DIRS}
+    ${GST_RTSP_SERVER_INCLUDE_DIRS}
 )
 
 add_executable(multiplex-streams main.c)
@@ -45,6 +47,7 @@ target_link_libraries(multiplex-streams
     ${GST_APP_LIBRARIES}
     ${GST_VIDEO_LIBRARIES}
     ${GLIB_LIBRARIES}
+    ${GST_RTSP_SERVER_LIBRARIES}
 )
 
 include(CTest)

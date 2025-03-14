@@ -1,2 +1,9 @@
 build
 .vscode/settings.json
+# ? Video formats:
+*.mp4
+*.webm
+*.ogg
+*.flv
+*.avi
+*.mov
