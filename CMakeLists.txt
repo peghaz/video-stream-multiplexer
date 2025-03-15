@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10.0)
-project(multiplex-streams VERSION 0.1.0 LANGUAGES C)
+project(multiplex-streams VERSION 0.1.0 LANGUAGES C CXX)
 
 add_definitions(-D__STDC_CONSTANT_MACROS)
 
@@ -17,6 +17,9 @@ pkg_check_modules(GST_APP REQUIRED gstreamer-app-1.0)
 pkg_check_modules(GST_VIDEO REQUIRED gstreamer-video-1.0)
 pkg_check_modules(GST_RTSP_SERVER REQUIRED gstreamer-rtsp-server-1.0)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
+
+# Find cJSON library
+find_package(cJSON REQUIRED)
 
 # Include directories for ffmpeg
 include_directories(
@@ -49,6 +52,8 @@ target_link_libraries(multiplex-streams
     ${GLIB_LIBRARIES}
     ${GST_RTSP_SERVER_LIBRARIES}
 )
+
+target_link_libraries(multiplex-streams  cjson)
 
 include(CTest)
 enable_testing()

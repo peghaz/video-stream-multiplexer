@@ -2,6 +2,7 @@
 #include <gst/rtsp-server/rtsp-server.h>
 #include <libavformat/avformat.h>
 #include <libavcodec/avcodec.h>
+#include <cjson/cJSON.h>
 
 int main(int argc, char *argv[])
 {
