@@ -1,6 +1,10 @@
+#include <gst/gst.h>
+#include <gst/rtsp-server/rtsp-server.h>
+#include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
 #include <single_stream.h>
 
-int initialize_single_stream(char *input_file, int port, int height, int width, int argc, char *argv[])
+int initialize_single_stream(const char *input_file, int port, int stream_height, int stream_width, int argc, char *argv[])
 {
     gst_init(&argc, &argv);
 
@@ -15,14 +19,21 @@ int initialize_single_stream(char *input_file, int port, int height, int width, 
 
     // Set up GStreamer RTSP server pipeline
     GstRTSPServer *server = gst_rtsp_server_new();
-    gst_rtsp_server_set_service(server, port);
+    char *service = g_strdup_printf("%d", port);
+    gst_rtsp_server_set_service(server, service);
     GstRTSPMountPoints *mounts = gst_rtsp_server_get_mount_points(server);
 
     // Pipeline: filesrc (file input) → decode → scale → encode → payload → RTSP
+    // const char *g_width = g_strdup_printf("%d", stream_width);
+    // const char *g_height = g_strdup_printf("%d", stream_height);
+
+    const char *g_width = malloc(10);
+    const char *g_height = malloc(10);
+
     gchar *pipeline_desc = g_strdup_printf(
         "( filesrc location=%s ! decodebin ! videoscale ! video/x-raw,width=%s,height=%s ! x264enc tune=zerolatency bitrate=500 speed-preset=ultrafast ! "
         "rtph264pay name=pay0 pt=96 )",
-        input_file, width, height);
+        input_file, g_width, stream_height);
 
     GstRTSPMediaFactory *factory = gst_rtsp_media_factory_new();
     gst_rtsp_media_factory_set_launch(factory, pipeline_desc);

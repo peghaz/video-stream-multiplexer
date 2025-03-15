@@ -7,3 +7,4 @@ build
 *.flv
 *.avi
 *.mov
+core.*

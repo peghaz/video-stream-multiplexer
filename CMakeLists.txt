@@ -47,7 +47,7 @@ include_directories(
 
 add_executable(multiplex-streams main.c)
 
-# Link libraries
+# Linking above libraries statically
 target_link_libraries(multiplex-streams
     PkgConfig::AVCODEC
     PkgConfig::AVFORMAT

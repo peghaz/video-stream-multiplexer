@@ -1,9 +1,6 @@
 #ifndef SINGLE_STREAM_H
 #define SINGLE_STREAM_H
 
-#include <gst/gst.h>
-#include <gst/rtsp-server/rtsp-server.h>
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
+int initialize_single_stream(const char *input_file, int port, int stream_height, int stream_width, int argc, char *argv[]);
 
 #endif
