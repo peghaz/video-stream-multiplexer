@@ -24,14 +24,8 @@ int initialize_single_stream(const char *input_file, int port, int stream_height
     GstRTSPMountPoints *mounts = gst_rtsp_server_get_mount_points(server);
 
     // Pipeline: filesrc (file input) → decode → scale → encode → payload → RTSP
-    // const char *g_width = g_strdup_printf("%d", stream_width);
-    // const char *g_height = g_strdup_printf("%d", stream_height);
-
-    const char *g_width = "600";
-    const char *g_height = "400";
-
-    // sprintf(g_width, "%d", stream_width);
-    // sprintf(g_height, "%d", stream_height);
+    gchar *g_width = g_strdup_printf("%d", stream_width);
+    gchar *g_height = g_strdup_printf("%d", stream_height);
 
     gchar *pipeline_desc = g_strdup_printf(
         "( filesrc location=%s ! decodebin ! videoscale ! video/x-raw,width=%s,height=%s ! x264enc tune=zerolatency bitrate=500 speed-preset=ultrafast ! "
@@ -54,6 +48,9 @@ int initialize_single_stream(const char *input_file, int port, int stream_height
     // Main loop
     GMainLoop *loop = g_main_loop_new(NULL, FALSE);
     g_main_loop_run(loop);
+
+    g_free(g_width);
+    g_free(g_height);
 
     return 0;
 }
