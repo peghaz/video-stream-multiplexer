@@ -23,6 +23,7 @@ add_subdirectory(contrib/cJSON)
 
 # Add src folder as a library
 add_library(single_stream src/single_stream.c)
+add_library(parse_config src/parse_config.c)
 
 include_directories(
     # Include directories for ffmpeg
@@ -57,6 +58,7 @@ target_link_libraries(multiplex-streams
     ${GST_RTSP_SERVER_LIBRARIES}
     cjson
     single_stream
+    parse_config
 )
 
 
