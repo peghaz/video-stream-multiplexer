@@ -4,9 +4,15 @@
 #include <libavformat/avformat.h>
 #include <single_stream.h>
 
-int initialize_single_stream(const char *input_file, int port, int stream_height, int stream_width, int argc, char *argv[])
+int initialize_single_stream(const char *input_file, int port, int stream_height, int stream_width)
 {
-    gst_init(&argc, &argv);
+    int argument_count = 1;
+    char *identifier = (char *)malloc(strlen(input_file));
+    strcpy(identifier, input_file);
+    char **identifiers = (char **)malloc(sizeof(char *));
+    identifiers[0] = identifier;
+
+    gst_init(&argument_count, &identifiers);
 
     // Verify FFmpeg can open the video
     AVFormatContext *fmt_ctx = NULL;
@@ -48,6 +54,7 @@ int initialize_single_stream(const char *input_file, int port, int stream_height
     // Main loop
     GMainLoop *loop = g_main_loop_new(NULL, FALSE);
     g_main_loop_run(loop);
+    g_main_loop_quit(loop);
 
     g_free(g_width);
     g_free(g_height);
