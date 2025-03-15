@@ -24,9 +24,6 @@ add_subdirectory(contrib/cJSON)
 # Add src folder as a library
 add_library(single_stream src/single_stream.c)
 
-# Find cJSON library
-find_package(cJSON REQUIRED)
-
 include_directories(
     # Include directories for ffmpeg
     ${AVFORMAT_INCLUDE_DIRS}

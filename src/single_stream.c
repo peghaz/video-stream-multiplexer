@@ -19,7 +19,7 @@ int initialize_single_stream(const char *input_file, int port, int stream_height
 
     // Set up GStreamer RTSP server pipeline
     GstRTSPServer *server = gst_rtsp_server_new();
-    char *service = g_strdup_printf("%d", port);
+    gchar *service = g_strdup_printf("%d", port);
     gst_rtsp_server_set_service(server, service);
     GstRTSPMountPoints *mounts = gst_rtsp_server_get_mount_points(server);
 
@@ -37,13 +37,13 @@ int initialize_single_stream(const char *input_file, int port, int stream_height
     gst_rtsp_media_factory_set_shared(factory, TRUE);
 
     // Attach media to RTSP path "/test"
-    gst_rtsp_mount_points_add_factory(mounts, "/", factory);
+    gst_rtsp_mount_points_add_factory(mounts, "/stream", factory);
     g_object_unref(mounts);
     g_free(pipeline_desc);
 
     // Start RTSP server
     gst_rtsp_server_attach(server, NULL);
-    g_print("RTSP stream ready at rtsp://127.0.0.1:%s/\n", service);
+    g_print("RTSP stream ready at rtsp://127.0.0.1:%s/stream\n", service);
 
     // Main loop
     GMainLoop *loop = g_main_loop_new(NULL, FALSE);

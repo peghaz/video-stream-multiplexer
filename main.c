@@ -4,16 +4,10 @@
 
 int main(int argc, char *argv[])
 {
-    if (argc != 5)
-    {
-        printf("Usage: %s <video-file> <port> <width> <height>\n", argv[0]);
-        return -1;
-    }
+    const char *input_file = "data/2022-02-13.mp4";
+    int port = 2121;
+    int width = 600;
+    int height = 400;
 
-    const char *input_file = argv[1];
-    const char *port = argv[2];
-    const char *width = argv[3];
-    const char *height = argv[4];
-
-    return initialize_single_stream(input_file, atoi(port), atoi(height), atoi(width), argc, argv);
+    return initialize_single_stream(input_file, port, height, width, argc, argv);
 }
