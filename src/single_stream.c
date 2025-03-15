@@ -4,11 +4,11 @@
 #include <libavformat/avformat.h>
 #include <single_stream.h>
 
-int initialize_single_stream(const char *input_file, int port, int stream_height, int stream_width)
+int initialize_single_stream(StreamConfig *config)
 {
     int argument_count = 1;
-    char *identifier = (char *)malloc(strlen(input_file));
-    strcpy(identifier, input_file);
+    char *identifier = (char *)malloc(strlen(config->video_path));
+    strcpy(identifier, config->video_path);
     char **identifiers = (char **)malloc(sizeof(char *));
     identifiers[0] = identifier;
 
@@ -16,27 +16,27 @@ int initialize_single_stream(const char *input_file, int port, int stream_height
 
     // Verify FFmpeg can open the video
     AVFormatContext *fmt_ctx = NULL;
-    if (avformat_open_input(&fmt_ctx, input_file, NULL, NULL) != 0)
+    if (avformat_open_input(&fmt_ctx, config->video_path, NULL, NULL) != 0)
     {
-        g_printerr("Could not open input file with FFmpeg: %s\n", input_file);
+        g_printerr("Could not open input file with FFmpeg: %s\n", config->video_path);
         return -1;
     }
     avformat_close_input(&fmt_ctx);
 
     // Set up GStreamer RTSP server pipeline
     GstRTSPServer *server = gst_rtsp_server_new();
-    gchar *service = g_strdup_printf("%d", port);
+    gchar *service = g_strdup_printf("%d", config->stream_port);
     gst_rtsp_server_set_service(server, service);
     GstRTSPMountPoints *mounts = gst_rtsp_server_get_mount_points(server);
 
     // Pipeline: filesrc (file input) → decode → scale → encode → payload → RTSP
-    gchar *g_width = g_strdup_printf("%d", stream_width);
-    gchar *g_height = g_strdup_printf("%d", stream_height);
+    gchar *g_width = g_strdup_printf("%d", config->video_width);
+    gchar *g_height = g_strdup_printf("%d", config->video_height);
 
     gchar *pipeline_desc = g_strdup_printf(
         "( filesrc location=%s ! decodebin ! videoscale ! video/x-raw,width=%s,height=%s ! x264enc tune=zerolatency bitrate=500 speed-preset=ultrafast ! "
         "rtph264pay name=pay0 pt=96 )",
-        input_file, g_width, g_height);
+        config->video_path, g_width, g_height);
 
     GstRTSPMediaFactory *factory = gst_rtsp_media_factory_new();
     gst_rtsp_media_factory_set_launch(factory, pipeline_desc);
