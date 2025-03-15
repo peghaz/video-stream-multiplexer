@@ -18,24 +18,31 @@ pkg_check_modules(GST_VIDEO REQUIRED gstreamer-video-1.0)
 pkg_check_modules(GST_RTSP_SERVER REQUIRED gstreamer-rtsp-server-1.0)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
 
+# Add the cJSON library as a remote subdirectory
+add_subdirectory(contrib/cJSON)
+
+# Add src folder as a library
+add_library(single_stream src/single_stream.c)
+
 # Find cJSON library
 find_package(cJSON REQUIRED)
 
-# Include directories for ffmpeg
 include_directories(
+    # Include directories for ffmpeg
     ${AVFORMAT_INCLUDE_DIRS}
     ${AVCODEC_INCLUDE_DIRS}
     ${SWSCALE_INCLUDE_DIRS}
     ${AVUTIL_INCLUDE_DIRS}
-)
-
-# Include directories for GStreamer
-include_directories(
+    # Include directories for GStreamer
     ${GSTREAMER_INCLUDE_DIRS}
     ${GST_APP_INCLUDE_DIRS}
     ${GST_VIDEO_INCLUDE_DIRS}
     ${GLIB_INCLUDE_DIRS}
     ${GST_RTSP_SERVER_INCLUDE_DIRS}
+    # Include directories for cJSON
+    contrib/cJSON
+    # Local project include directories
+    include
 )
 
 add_executable(multiplex-streams main.c)
@@ -51,9 +58,10 @@ target_link_libraries(multiplex-streams
     ${GST_VIDEO_LIBRARIES}
     ${GLIB_LIBRARIES}
     ${GST_RTSP_SERVER_LIBRARIES}
+    cjson
+    single_stream
 )
 
-target_link_libraries(multiplex-streams cjson)
 
 include(CTest)
 enable_testing()
