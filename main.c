@@ -2,7 +2,6 @@
 #include <gst/rtsp-server/rtsp-server.h>
 #include <libavformat/avformat.h>
 #include <libavcodec/avcodec.h>
-#include <cjson/cJSON.h>
 
 int main(int argc, char *argv[])
 {
@@ -18,8 +17,6 @@ int main(int argc, char *argv[])
     const char *height = argv[4];
 
     gst_init(&argc, &argv);
-    // Initialize FFmpeg
-    // av_register_all();
 
     // Verify FFmpeg can open the video
     AVFormatContext *fmt_ctx = NULL;

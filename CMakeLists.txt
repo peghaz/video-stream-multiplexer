@@ -53,7 +53,7 @@ target_link_libraries(multiplex-streams
     ${GST_RTSP_SERVER_LIBRARIES}
 )
 
-target_link_libraries(multiplex-streams  cjson)
+target_link_libraries(multiplex-streams cjson)
 
 include(CTest)
 enable_testing()
