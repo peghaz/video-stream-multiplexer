@@ -6,13 +6,17 @@
 
 int initialize_single_stream(StreamConfig *config)
 {
-    int argument_count = 1;
-    char *identifier = (char *)malloc(strlen(config->video_path));
+    int gst_argument_count = 1;
+
+    char stream_port_str[10];
+    sprintf(stream_port_str, "sid-%d", config->stream_port);
+
+    char *identifier = (char *)malloc(strlen(stream_port_str));
     strcpy(identifier, config->video_path);
     char **identifiers = (char **)malloc(sizeof(char *));
     identifiers[0] = identifier;
 
-    gst_init(&argument_count, &identifiers);
+    gst_init(&gst_argument_count, &identifiers);
 
     // Verify FFmpeg can open the video
     AVFormatContext *fmt_ctx = NULL;
