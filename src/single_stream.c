@@ -27,13 +27,16 @@ int initialize_single_stream(const char *input_file, int port, int stream_height
     // const char *g_width = g_strdup_printf("%d", stream_width);
     // const char *g_height = g_strdup_printf("%d", stream_height);
 
-    const char *g_width = malloc(10);
-    const char *g_height = malloc(10);
+    const char *g_width = "600";
+    const char *g_height = "400";
+
+    // sprintf(g_width, "%d", stream_width);
+    // sprintf(g_height, "%d", stream_height);
 
     gchar *pipeline_desc = g_strdup_printf(
         "( filesrc location=%s ! decodebin ! videoscale ! video/x-raw,width=%s,height=%s ! x264enc tune=zerolatency bitrate=500 speed-preset=ultrafast ! "
         "rtph264pay name=pay0 pt=96 )",
-        input_file, g_width, stream_height);
+        input_file, g_width, g_height);
 
     GstRTSPMediaFactory *factory = gst_rtsp_media_factory_new();
     gst_rtsp_media_factory_set_launch(factory, pipeline_desc);
@@ -46,7 +49,7 @@ int initialize_single_stream(const char *input_file, int port, int stream_height
 
     // Start RTSP server
     gst_rtsp_server_attach(server, NULL);
-    g_print("RTSP stream ready at rtsp://127.0.0.1:%s/\n", port);
+    g_print("RTSP stream ready at rtsp://127.0.0.1:%s/\n", service);
 
     // Main loop
     GMainLoop *loop = g_main_loop_new(NULL, FALSE);
