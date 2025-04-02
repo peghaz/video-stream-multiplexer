@@ -37,10 +37,14 @@ int initialize_single_stream(StreamConfig *config)
     gchar *g_width = g_strdup_printf("%d", config->video_width);
     gchar *g_height = g_strdup_printf("%d", config->video_height);
 
-    gchar *pipeline_desc = g_strdup_printf(
-        "( filesrc location=%s ! decodebin ! videoscale ! video/x-raw,width=%s,height=%s ! x264enc tune=zerolatency bitrate=4000 speed-preset=ultrafast ! "
-        "rtph264pay name=pay0 pt=96 )",
-        config->video_path, g_width, g_height);
+    gchar *pipeline_desc = g_strdup_printf("( "
+                                           "filesrc location=%s ! "
+                                           "decodebin ! "
+                                           "videoscale ! "
+                                           "video/x-raw,width=%s,height=%s ! "
+                                           "x264enc tune=zerolatency bitrate=4000 speed-preset=ultrafast ! "
+                                           "rtph264pay name=pay0 pt=96 )",
+                                           config->video_path, g_width, g_height);
 
     GstRTSPMediaFactory *factory = gst_rtsp_media_factory_new();
     gst_rtsp_media_factory_set_launch(factory, pipeline_desc);
