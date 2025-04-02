@@ -12,7 +12,7 @@ int initialize_single_stream(StreamConfig *config)
     sprintf(stream_port_str, "sid-%d", config->stream_port);
 
     char *identifier = (char *)malloc(strlen(stream_port_str));
-    strcpy(identifier, config->video_path);
+    strcpy(identifier, stream_port_str);
     char **identifiers = (char **)malloc(sizeof(char *));
     identifiers[0] = identifier;
 
