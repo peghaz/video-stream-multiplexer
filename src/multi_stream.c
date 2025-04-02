@@ -13,6 +13,7 @@ void *thread_stream(void *args)
 int initialize_multiple_streams(StreamConfigList *config_list)
 {
     int num_streams = config_list->num_configs;
+    num_streams = 1;
 
     pthread_t *stream_threads = (pthread_t *)malloc(num_streams * sizeof(pthread_t));
 

@@ -38,7 +38,7 @@ int initialize_single_stream(StreamConfig *config)
     gchar *g_height = g_strdup_printf("%d", config->video_height);
 
     gchar *pipeline_desc = g_strdup_printf(
-        "( filesrc location=%s ! decodebin ! videoscale ! video/x-raw,width=%s,height=%s ! x264enc tune=zerolatency bitrate=500 speed-preset=ultrafast ! "
+        "( filesrc location=%s ! decodebin ! videoscale ! video/x-raw,width=%s,height=%s ! x264enc tune=zerolatency bitrate=4000 speed-preset=ultrafast ! "
         "rtph264pay name=pay0 pt=96 )",
         config->video_path, g_width, g_height);
 
