@@ -26,3 +26,10 @@ $ ./multiplex-streams ../config/streams.json
   "video_height": 720
 }
 ```
+
+Dependencies:
+On Fedora/OpenSUSE/Rocky Linux/RedHat Enterprise Linux, you can install the dependencies with:
+
+```bash
+sudo dnf install cmake gcc gstreamer1-devel gstreamer1-plugins-base-devel gstreamer1-plugins-good-devel gstreamer1-plugins-bad-free-devel gstreamer1-plugins-ugly-devel gstreamer1-libav-devel gstreamer1-rtsp-devel gstreamer1-rtsp-server-devel ffmpeg ffmpeg-devel
+```

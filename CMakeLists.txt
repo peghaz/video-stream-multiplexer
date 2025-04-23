@@ -5,6 +5,7 @@ add_definitions(-D__STDC_CONSTANT_MACROS)
 
 find_package(PkgConfig REQUIRED)
 
+
 # Check for FFmpeg components
 pkg_check_modules(AVCODEC REQUIRED IMPORTED_TARGET libavcodec)
 pkg_check_modules(AVFORMAT REQUIRED IMPORTED_TARGET libavformat)
@@ -18,8 +19,6 @@ pkg_check_modules(GST_VIDEO REQUIRED gstreamer-video-1.0)
 pkg_check_modules(GST_RTSP_SERVER REQUIRED gstreamer-rtsp-server-1.0)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
 
-# Add the cJSON library as a remote subdirectory
-add_subdirectory(contrib/cJSON)
 
 # Add src folder as a library
 add_library(single_stream src/single_stream.c)
@@ -63,6 +62,8 @@ target_link_libraries(multiplex-streams
     multi_stream
 )
 
+# Add the cJSON library as a remote subdirectory
+add_subdirectory(contrib/cJSON)
 
 include(CTest)
 enable_testing()
