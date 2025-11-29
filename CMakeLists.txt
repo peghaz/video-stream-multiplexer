@@ -19,11 +19,32 @@ pkg_check_modules(GST_VIDEO REQUIRED gstreamer-video-1.0)
 pkg_check_modules(GST_RTSP_SERVER REQUIRED gstreamer-rtsp-server-1.0)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
 
+# Add the cJSON library as a subdirectory (must be before using the target)
+add_subdirectory(contrib/cJSON)
 
 # Add src folder as a library
 add_library(single_stream src/single_stream.c)
 add_library(parse_config src/parse_config.c)
 add_library(multi_stream src/multi_stream.c)
+
+# Link parse_config with cJSON
+target_link_libraries(parse_config cjson)
+
+# Link single_stream with its dependencies (FFmpeg and GStreamer)
+target_link_libraries(single_stream
+    PkgConfig::AVCODEC
+    PkgConfig::AVFORMAT
+    PkgConfig::AVUTIL
+    PkgConfig::SWSCALE
+    ${GSTREAMER_LIBRARIES}
+    ${GST_APP_LIBRARIES}
+    ${GST_VIDEO_LIBRARIES}
+    ${GLIB_LIBRARIES}
+    ${GST_RTSP_SERVER_LIBRARIES}
+)
+
+# Link multi_stream with single_stream
+target_link_libraries(multi_stream single_stream)
 
 include_directories(
     # Include directories for ffmpeg
@@ -61,9 +82,6 @@ target_link_libraries(multiplex-streams
     single_stream
     multi_stream
 )
-
-# Add the cJSON library as a remote subdirectory
-add_subdirectory(contrib/cJSON)
 
 include(CTest)
 enable_testing()
