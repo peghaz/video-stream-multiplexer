@@ -8,3 +8,5 @@ build
 *.avi
 *.mov
 core.*
+
+config/streams.json

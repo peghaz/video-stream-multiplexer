@@ -1,0 +1,14 @@
+[
+    {
+        "stream_port": 6666,
+        "video_path": "video_1.mp4",
+        "video_width": 320,
+        "video_height": 240
+    },
+    {
+        "stream_port": 6667,
+        "video_path": "video_2.mp4",
+        "video_width": 320,
+        "video_height": 240
+    }
+]
