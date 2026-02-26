@@ -6,6 +6,7 @@ typedef struct
     int stream_port;
     int video_width;
     int video_height;
+    int enable_audio;
 } StreamConfig;
 
 typedef struct

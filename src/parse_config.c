@@ -17,13 +17,13 @@ char *print_stream_config(StreamConfig *config)
         return NULL;
     }
 
-    char *format = "{\n\tVideo Path: %s,\n\tStream Port: %d,\n\tVideo Width: %d,\n\tVideo Height: %d\n}";
-    sprintf(config_str, format, config->video_path, config->stream_port, config->video_width, config->video_height);
+    char *format = "{\n\tVideo Path: %s,\n\tStream Port: %d,\n\tVideo Width: %d,\n\tVideo Height: %d,\n\tEnable Audio: %s\n}";
+    sprintf(config_str, format, config->video_path, config->stream_port, config->video_width, config->video_height, config->enable_audio ? "true" : "false");
     fprintf(stdout, "%s\n", config_str);
     return config_str;
 }
 
-StreamConfig *StreamConfig__new(char *video_path, int stream_port, int video_width, int video_height)
+StreamConfig *StreamConfig__new(char *video_path, int stream_port, int video_width, int video_height, int enable_audio)
 {
     StreamConfig *config = (StreamConfig *)malloc(sizeof(StreamConfig));
     if (config == NULL)
@@ -36,6 +36,7 @@ StreamConfig *StreamConfig__new(char *video_path, int stream_port, int video_wid
     config->stream_port = stream_port;
     config->video_width = video_width;
     config->video_height = video_height;
+    config->enable_audio = enable_audio;
 
     return config;
 }
@@ -73,8 +74,11 @@ StreamConfigList *parse_stream_configs_from_json(const char *filename)
         cJSON *stream_port = cJSON_GetObjectItem(item, "stream_port");
         cJSON *video_width = cJSON_GetObjectItem(item, "video_width");
         cJSON *video_height = cJSON_GetObjectItem(item, "video_height");
+        cJSON *enable_audio = cJSON_GetObjectItem(item, "enable_audio");
 
-        StreamConfig *config = StreamConfig__new(video_path->valuestring, stream_port->valueint, video_width->valueint, video_height->valueint);
+        int audio_enabled = (enable_audio != NULL && cJSON_IsTrue(enable_audio)) ? 1 : 0;
+
+        StreamConfig *config = StreamConfig__new(video_path->valuestring, stream_port->valueint, video_width->valueint, video_height->valueint, audio_enabled);
 
         stream_configs[current_config_index] = config;
         current_config_index++;

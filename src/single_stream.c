@@ -33,18 +33,40 @@ int initialize_single_stream(StreamConfig *config)
     gst_rtsp_server_set_service(server, service);
     GstRTSPMountPoints *mounts = gst_rtsp_server_get_mount_points(server);
 
-    // Pipeline: filesrc (file input) → decode → scale → encode → payload → RTSP
+    // Pipeline: filesrc (file input) → demux → decode → scale → encode → payload → RTSP
     gchar *g_width = g_strdup_printf("%d", config->video_width);
     gchar *g_height = g_strdup_printf("%d", config->video_height);
 
-    gchar *pipeline_desc = g_strdup_printf("( "
-                                           "filesrc location=%s ! "
-                                           "decodebin ! "
-                                           "videoscale ! "
-                                           "video/x-raw,width=%s,height=%s ! "
-                                           "x264enc tune=zerolatency bitrate=4000 speed-preset=ultrafast ! "
-                                           "rtph264pay name=pay0 pt=96 )",
-                                           config->video_path, g_width, g_height);
+    gchar *pipeline_desc;
+    if (config->enable_audio)
+    {
+        // Audio + Video pipeline: demux into separate audio/video branches
+        pipeline_desc = g_strdup_printf("( "
+                                        "filesrc location=%s ! "
+                                        "qtdemux name=demux "
+                                        "demux.video_0 ! queue ! decodebin ! "
+                                        "videoscale ! video/x-raw,width=%s,height=%s ! "
+                                        "x264enc tune=zerolatency bitrate=4000 speed-preset=ultrafast ! "
+                                        "rtph264pay name=pay0 pt=96 "
+                                        "demux.audio_0 ! queue ! decodebin ! "
+                                        "audioconvert ! audioresample ! "
+                                        "opusenc ! rtpopuspay name=pay1 pt=97 )",
+                                        config->video_path, g_width, g_height);
+        g_print("Audio+Video RTSP pipeline created for %s\n", config->video_path);
+    }
+    else
+    {
+        // Video-only pipeline (original)
+        pipeline_desc = g_strdup_printf("( "
+                                        "filesrc location=%s ! "
+                                        "decodebin ! "
+                                        "videoscale ! "
+                                        "video/x-raw,width=%s,height=%s ! "
+                                        "x264enc tune=zerolatency bitrate=4000 speed-preset=ultrafast ! "
+                                        "rtph264pay name=pay0 pt=96 )",
+                                        config->video_path, g_width, g_height);
+        g_print("Video-only RTSP pipeline created for %s\n", config->video_path);
+    }
 
     GstRTSPMediaFactory *factory = gst_rtsp_media_factory_new();
     gst_rtsp_media_factory_set_launch(factory, pipeline_desc);
